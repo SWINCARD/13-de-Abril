@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto Interesante</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .contenedor {
+            text-align: center;
+            color: white;
+            z-index: 1;
+        }
+
+        p {
+            font-size: 2rem;
+        }
+
+        .opciones {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        button {
+            position: relative;
+            font-size: 1.5rem;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            cursor: pointer;
+            outline: none;
+            overflow: hidden;
+            background-color: #8B4513; /* Café suave */
+            transition: background-color 0.8s ease; /* Cambio lento de color */
+        }
+
+        button::before,
+        button::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            animation: ripple 3s infinite; /* Animación más lenta */
+        }
+
+        button::after {
+            animation-delay: 1.5s; /* Retardo para la segunda animación */
+        }
+
+        @keyframes ripple {
+            from {
+                transform: scale(0);
+                opacity: 1;
+            }
+            to {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        button:hover {
+            background-color: #fff; /* Cambia a blanco al pasar el cursor */
+            color: #8B4513; /* Cambia el color del texto a café suave al pasar el cursor */
+        }
+
+        button span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Añadir un poco de espacio entre los botones */
+        .opciones button {
+            margin: 0 10px; /* Se puede ajustar según la separación deseada */
+        }
+
+        /* Ocultar los botones de música inicialmente */
+        .musicBtns {
+            display: none;
+        }
+
+        /* Estilo para el video de fondo */
+        #background-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -1;
+        }
+
+        /* Estilo para la letra de la canción */
+        #letra {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: white;
+            white-space: pre-wrap;
+            display: none; /* Ocultar letra inicialmente */
+        }
+
+        /* Efecto de resaltado para la letra */
+        .letra-line {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .letra-visible {
+            opacity: 1;
+        }
+
+        /* Estilo para la imagen con marco circular */
+        .imagen-contenedor {
+            position: relative;
+            width: 300px; /* Ajustar según el tamaño deseado */
+            height: 300px; /* Ajustar según el tamaño deseado */
+            margin: 20px auto; /* Centrar la imagen */
+            display: none; /* Ocultar contenedor de imagen inicialmente */
+        }
+
+        .imagen-circular {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%; /* Aplicar el marco circular */
+            border: 5px solid white; /* Estilo del borde */
+            overflow: hidden;
+        }
+
+        .imagen-circular img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Nuevo estilo para el mensaje de agradecimiento */
+        .mensaje-agradecimiento {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            display: none; /* Ocultar el mensaje inicialmente */
+        }
+    </style>
+</head>
+<body>
+    <video id="background-video" autoplay loop muted>
+        <source src="12.mp4" type="video/mp4">
+       Tu navegador no soporta la etiqueta de video.
+    </video>
+
+    <div class="contenedor">
+        <p>Tengo algo interesante para ti, ¿Quieres ver?</p>
+        <div class="opciones">
+            <button id="siBtn"><span>Si</span></button>
+            <button id="noBtn"><span>No</span></button>
+        </div>
+        <div id="mensaje" class="musicBtns"> <!-- Agregamos la clase "musicBtns" para ocultarla inicialmente -->
+            <button class="playBtn" data-src="Say Yes To Heaven.mp3" data-letra="   If you dance, I'll dance
+            And if you don't, I'll dance anyway
+            Give peace a chance
+            Let the fear you have fall away
+            I've got my eye on you
+            I've got my eye on you
+            Say yes to Heaven
+            Say yes to me
+            Say yes to Heaven
+            Say yes to me
+            If you go, I'll stay
+            You come back, I'll be right here
+            Like a barge at sea
+            In the storm, I stay clear
+            'Cause I've got my mind on you
+            I've got my mind on you
+            Say yes to Heaven
+            Say yes to me
+            Say yes to Heaven
+            Say yes to me"
+            " data-imagen="Pareja.jpg"><span>Reproducir Mensaje (observa la parte superior derecha)</span></button>
+            <!-- Agregar más botones de música aquí -->
+        </div>
+        <div class="imagen-contenedor">
+            <div class="imagen-circular">
+                <img id="imagenMusica" src="" alt="Imagen de la música">
+            </div>
+        </div>
+        <div id="letra"></div>
+    </div>
+
+    <div id="mensajeAgradecimiento" class="mensaje-agradecimiento">
+        <p>Mi amor, quiero agradecerte por todos los momentos maravillosos que hemos compartido juntos. Cada risa, cada aventura, cada momento de silencio y cada palabra compartida ha hecho de cada día algo especial a tu lado. Eres mi alegría, mi compañera y mi mejor amiga. Gracias por ser parte de mi vida y por hacer cada día más hermoso. Te amo con todo mi corazón ❤️</p>
+        <p>El 13 de abril marca otro año de nuestra hermosa historia juntos, y quiero aprovechar esta ocasión para recordarte lo especial que eres para mí. Cada día contigo es un regalo, y no puedo esperar para ver qué aventuras nos esperan en el futuro. Eres mi confidente, mi apoyo y mi amor eterno. Feliz 13 de abril, mi amor.</p>
+        <p>Espero que este día te traiga tanta felicidad como la que tú me has traído a mí. Celebrar nuestro amor y nuestra conexión es algo que valoro profundamente, y estoy agradecido por cada momento que pasamos juntos. Eres mi luz en los días oscuros y mi razón para sonreír cada día. Te amo hoy, mañana y siempre.</p>
+        <p>Con Mucho Amor TU NOVIECITO QUERIDO KELVIN, TE AMO SOLO A TI 🫵❤️</p>
+        <p>Casate conmigo, si?</p>
+    </div>
+
+    <script>
+        const siBtn = document.getElementById('siBtn');
+        const noBtn = document.getElementById('noBtn');
+        const musicBtns = document.querySelector('.musicBtns');
+        const playBtns = document.querySelectorAll('.playBtn');
+        const letraDiv = document.getElementById('letra');
+        const imagenContenedor = document.querySelector('.imagen-contenedor');
+        const imagenMusica = document.getElementById('imagenMusica');
+        const pregunta = document.querySelector('.contenedor p');
+        const botonNuevo = document.createElement('button'); // Creamos el nuevo botón
+        botonNuevo.textContent = 'Feliz 13 de abril ❤️'; // Texto del nuevo botón
+        botonNuevo.style.position = 'absolute'; // Establecer posición absoluta
+        botonNuevo.style.top = '10px'; // Distancia desde la parte superior
+        botonNuevo.style.right = '10px'; // Distancia desde la parte derecha
+        botonNuevo.style.zIndex = '9999'; // Asegurar que el botón esté en la parte superior
+        let currentAudio;
+        let letraAnimation;
+    
+        // Función para iniciar la animación de la letra
+        function iniciarAnimacionLetra() {
+            letraAnimation = setTimeout(() => {
+                document.querySelectorAll('.letra-line').forEach((line, index) => {
+                    setTimeout(() => {
+                        line.classList.add('letra-visible');
+                    }, index * 4777); // Retrasar cada línea por 0.04 segundos
+                });
+            }, 1000); // Esperar un segundo antes de comenzar las animaciones
+        }
+    
+        // Función para detener la animación de la letra
+        function detenerAnimacionLetra() {
+            clearTimeout(letraAnimation);
+            document.querySelectorAll('.letra-line').forEach(line => {
+                line.classList.remove('letra-visible');
+            });
+        }
+    
+        // Mostrar los botones de música cuando se hace clic en "Sí"
+        siBtn.addEventListener('click', () => {
+            siBtn.style.display = 'none';
+            noBtn.style.display = 'none';
+            musicBtns.style.display = 'flex';
+        });
+    
+        // Control de reproducción de música
+        playBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const src = btn.getAttribute('data-src');
+                const letra = btn.getAttribute('data-letra');
+                const imagen = btn.getAttribute('data-imagen');
+                if (currentAudio && currentAudio.src === src && !currentAudio.paused) {
+                    currentAudio.pause();
+                    detenerAnimacionLetra(); // Detener la animación de la letra
+                } else {
+                    if (currentAudio) {
+                        currentAudio.pause();
+                    }
+                    currentAudio = new Audio(src);
+                    // Ocultar los botones de reproducción
+                    musicBtns.style.display = 'none';
+                    // Control de reproducción de la música
+                    currentAudio.onplay = () => {
+                        iniciarAnimacionLetra(); // Iniciar la animación de la letra
+                        // Mostrar el nuevo botón después de 20 segundos
+                        setTimeout(() => {
+                            document.body.appendChild(botonNuevo);
+                        }, 20000);
+                    };
+                    currentAudio.onpause = () => {
+                        detenerAnimacionLetra(); // Detener la animación de la letra
+                    };
+                    currentAudio.play();
+                    // Mostrar la imagen con marco circular
+                    imagenMusica.src = imagen;
+                    imagenContenedor.style.display = 'block'; // Mostrar el contenedor de la imagen
+                    // Ocultar la pregunta
+                    pregunta.style.display = 'none';
+                    // Mostrar la letra de la canción
+                    letraDiv.style.display = 'block';
+                    // Dividir la letra en líneas y agregar clase de estilo
+                    const letraLines = letra.split('\n');
+                    letraDiv.innerHTML = letraLines.map(line => `<div class="letra-line">${line}</div>`).join('');
+                    // Iniciar la animación de la letra
+                    iniciarAnimacionLetra();
+                }
+            });
+        });
+
+// Función para mostrar el mensaje de agradecimiento personalizado
+function mostrarMensajeAgradecimiento() {
+    const mensajeAgradecimiento = document.getElementById('mensajeAgradecimiento');
+
+    // Comprobar si ya existe un botón "Cerrar"
+    const botonCerrarExistente = document.querySelector('#mensajeAgradecimiento button');
+    if (!botonCerrarExistente) { // Si no existe el botón "Cerrar", entonces lo creamos
+        const botonNuevoCerrar = document.createElement('button'); // Creamos un nuevo botón para cerrar el mensaje
+        botonNuevoCerrar.textContent = 'Cerrar'; // Texto del nuevo botón
+        botonNuevoCerrar.style.marginTop = '20px'; // Añadimos margen superior al botón
+
+        // Añadimos un evento click al nuevo botón para ocultar el mensaje
+        botonNuevoCerrar.addEventListener('click', () => {
+            mensajeAgradecimiento.style.display = 'none'; // Ocultar el mensaje de agradecimiento
+            // Restaurar la visibilidad de los elementos originales
+            document.querySelector('.contenedor').style.display = 'flex';
+            pregunta.style.display = 'block';
+        });
+
+        // Insertamos el nuevo botón en el mensaje de agradecimiento
+        mensajeAgradecimiento.appendChild(botonNuevoCerrar);
+    }
+
+    // Mostramos el mensaje de agradecimiento personalizado
+    mensajeAgradecimiento.style.display = 'block';
+}
+
+// Añadimos un evento click al botón "Feliz 13 de abril ❤️"
+botonNuevo.addEventListener('click', mostrarMensajeAgradecimiento);
+    </script>            
+</body>
+</html>
